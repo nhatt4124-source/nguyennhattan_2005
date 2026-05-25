@@ -1,21 +1,1111 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
-    <title>Thực hành An toàn thông tin nâng cao</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HUTECH - Thực Hành An Toàn Thông Tin Nâng Cao</title>
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Custom Style Sheet -->
+    <style>
+        :root {
+            --bg-primary: #0b0f19;
+            --bg-secondary: #131c2e;
+            --bg-tertiary: #1e293b;
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --accent-green: #10b981;
+            --accent-pink: #ec4899;
+            --accent-cyan: #06b6d4;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --glass-bg: rgba(19, 28, 46, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --gradient-primary: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            --gradient-success: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            --gradient-cyan: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+            --glow-blue: 0 0 20px rgba(59, 130, 246, 0.35);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(139, 92, 246, 0.08) 0%, transparent 40%);
+        }
+
+        /* Modern Gradient Header */
+        header {
+            background: rgba(11, 15, 25, 0.85);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 1.25rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .header-logo-container {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+        }
+
+        .logo-img {
+            height: 48px;
+            filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.4));
+            transition: transform 0.3s ease;
+        }
+
+        .logo-img:hover {
+            transform: scale(1.05);
+        }
+
+        .header-title-wrapper {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header-title {
+            font-size: 1.2rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+        }
+
+        .header-subtitle {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-top: 0.1rem;
+        }
+
+        /* Layout Container */
+        .dashboard-container {
+            display: flex;
+            flex: 1;
+            padding: 2rem;
+            gap: 2rem;
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 290px;
+            flex-shrink: 0;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 1.5rem;
+            backdrop-filter: blur(12px);
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            height: fit-content;
+        }
+
+        .sidebar-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-secondary);
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            padding-left: 0.75rem;
+            opacity: 0.8;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            padding: 0.9rem 1.1rem;
+            border-radius: 14px;
+            text-align: left;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid transparent;
+        }
+
+        .tab-btn:hover:not(.disabled) {
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text-primary);
+            transform: translateX(5px);
+            border-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .tab-btn.active {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: var(--glow-blue);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .tab-btn i {
+            font-size: 1.05rem;
+            width: 22px;
+            text-align: center;
+        }
+
+        .tab-btn.disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .tab-btn .badge {
+            margin-left: auto;
+            background: rgba(236, 72, 153, 0.15);
+            color: var(--accent-pink);
+            font-size: 0.7rem;
+            padding: 0.15rem 0.4rem;
+            border-radius: 6px;
+            font-weight: 700;
+            border: 1px solid rgba(236, 72, 153, 0.2);
+        }
+
+        /* Content Panel Styling */
+        .content-area {
+            flex-grow: 1;
+            min-width: 0;
+        }
+
+        .cipher-panel {
+            display: none;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2.25rem;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            animation: panelFadeIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .cipher-panel.active {
+            display: block;
+        }
+
+        @keyframes panelFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .panel-header {
+            margin-bottom: 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            padding-bottom: 1.25rem;
+        }
+
+        .panel-title-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .panel-title {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+        }
+
+        .panel-title i {
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .panel-desc {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+            line-height: 1.5;
+        }
+
+        /* Cipher Forms Layout */
+        .cipher-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 1024px) {
+            .dashboard-container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+            }
+            .cipher-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card-section {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 18px;
+            padding: 1.75rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card-section:hover {
+            border-color: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-section-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            padding-bottom: 0.75rem;
+        }
+
+        .title-encrypt { color: var(--accent-blue); }
+        .title-decrypt { color: var(--accent-green); }
+        .title-matrix { color: var(--accent-cyan); }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.55rem;
+        }
+
+        label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .form-control {
+            background: rgba(11, 15, 25, 0.65);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 0.85rem 1.1rem;
+            color: white;
+            font-size: 0.95rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 100%;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+            background: rgba(11, 15, 25, 0.85);
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 90px;
+        }
+
+        /* Buttons Styling */
+        .btn {
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 0.85rem 1.5rem;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-encrypt {
+            background: var(--gradient-primary);
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-decrypt {
+            background: var(--gradient-success);
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-info {
+            background: var(--gradient-cyan);
+            box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);
+        }
+
+        /* Result Panel */
+        .result-box {
+            background: rgba(11, 15, 25, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 1.25rem;
+            position: relative;
+            margin-top: 1.25rem;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: none;
+        }
+
+        .result-box.show {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .result-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-secondary);
+            margin-bottom: 0.6rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .result-text {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.05rem;
+            color: #38bdf8;
+            word-break: break-all;
+            white-space: pre-wrap;
+            padding-right: 2.5rem;
+            font-weight: 600;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 0.85rem;
+            right: 0.85rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-secondary);
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .copy-btn:hover {
+            background: rgba(255, 255, 255, 0.12);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        /* Playfair Matrix styles */
+        .playfair-matrix-wrapper {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 18px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            grid-column: span 2;
+        }
+
+        @media (max-width: 1024px) {
+            .playfair-matrix-wrapper {
+                grid-column: span 1;
+            }
+        }
+
+        .playfair-table {
+            border-collapse: separate;
+            border-spacing: 8px;
+            margin-top: 1rem;
+        }
+
+        .playfair-table td {
+            width: 50px;
+            height: 50px;
+            background: rgba(11, 15, 25, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            color: #38bdf8;
+            font-weight: 700;
+            font-size: 1.25rem;
+            text-align: center;
+            vertical-align: middle;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .playfair-table td:hover {
+            background: var(--gradient-primary);
+            color: white;
+            transform: scale(1.1) translateY(-2px);
+            box-shadow: var(--glow-blue);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Placeholder RSA panel styles */
+        .rsa-placeholder-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 1.5rem;
+            text-align: center;
+            gap: 1.25rem;
+        }
+
+        .rsa-icon {
+            font-size: 4rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 10px rgba(139, 92, 246, 0.2));
+            animation: pulse 2s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.05); }
+        }
+
+        .rsa-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .rsa-desc {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            max-width: 500px;
+            line-height: 1.6;
+        }
+
+        .rsa-badge {
+            background: rgba(139, 92, 246, 0.15);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            color: var(--accent-purple);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Toast Popup */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--gradient-success);
+            color: white;
+            padding: 0.85rem 1.75rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            font-weight: 600;
+            font-size: 0.95rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 100;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Footer styling */
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            border-top: 1px solid var(--glass-border);
+            margin-top: auto;
+            background: rgba(11, 15, 25, 0.6);
+            backdrop-filter: blur(8px);
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <img src="https://file1.hutech.edu.vn/file/editor/homepage/stories/hinh34/logo%20CMYK-01.png" alt="hutech" style="display: block; margin-left: auto; margin-right: auto; width: 30%;">
-        <h4 style="font-weight: bold; text-align: center;">BÀI THỰC HÀNH BẢO MẬT THÔNG TIN NÂNG CAO</h4>
-        <ul style="margin-top: 30px;">
-            <li><a href="/caesar">Ceasar Cipher</a></li>
-            <li><a href="/vigenere">Vigenere Cipher</a></li>
-            <li><a href="/railfence">Rail Fence Cipher</a></li>
-            <li><a href="/playfair">Playfair Cipher</a></li>
-            <li><a href="/transposition">Transposition Cipher</a></li>
-            <li><a href="/rsa">RSA Cipher</a></li>
-        </ul>
+
+    <!-- Header Area -->
+    <header>
+        <div class="header-logo-container">
+            <img src="https://file1.hutech.edu.vn/file/editor/homepage/stories/hinh34/logo%20CMYK-01.png" alt="Logo Hutech" class="logo-img">
+            <div class="header-title-wrapper">
+                <h1 class="header-title">An Toàn Thông Tin Nâng Cao</h1>
+                <span class="header-subtitle">Hệ Thống Thực Hành Các Thuật Toán Mật Mã</span>
+            </div>
+        </div>
+        <div>
+            <span class="rsa-badge"><i class="fa-solid fa-graduation-cap"></i> Lab-02</span>
+        </div>
+    </header>
+
+    <!-- Main Dashboard -->
+    <div class="dashboard-container">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <h2 class="sidebar-title">Danh sách mật mã</h2>
+            
+            <button class="tab-btn active" onclick="switchTab('caesar')">
+                <i class="fa-solid fa-arrow-right-to-bracket"></i> Caesar Cipher
+            </button>
+            
+            <button class="tab-btn" onclick="switchTab('vigenere')">
+                <i class="fa-solid fa-key"></i> Vigenere Cipher
+            </button>
+            
+            <button class="tab-btn" onclick="switchTab('railfence')">
+                <i class="fa-solid fa-table-cells-large"></i> Rail Fence Cipher
+            </button>
+            
+            <button class="tab-btn" onclick="switchTab('playfair')">
+                <i class="fa-solid fa-border-all"></i> Playfair Cipher
+            </button>
+            
+            <button class="tab-btn" onclick="switchTab('transposition')">
+                <i class="fa-solid fa-arrows-split-up-and-left"></i> Transposition
+            </button>
+            
+            <button class="tab-btn" onclick="switchTab('rsa')">
+                <i class="fa-solid fa-shield-halved"></i> RSA Cipher <span class="badge">Next</span>
+            </button>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="content-area">
+
+            <!-- CAESAR CIPHER PANEL -->
+            <section id="caesar-panel" class="cipher-panel active">
+                <div class="panel-header">
+                    <h3 class="panel-title"><i class="fa-solid fa-arrow-right-to-bracket"></i> Caesar Cipher</h3>
+                    <p class="panel-desc">Mật mã Caesar dịch chuyển mỗi ký tự trong văn bản đi một khoảng số K nhất định trong bảng chữ cái.</p>
+                </div>
+                
+                <div class="cipher-grid">
+                    <!-- Caesar Encryption Form -->
+                    <div class="card-section">
+                        <h4 class="card-section-title title-encrypt"><i class="fa-solid fa-lock"></i> Mã hóa</h4>
+                        <form onsubmit="handleCipherSubmit(event, '/encrypt', 'caesar-enc')">
+                            <div class="form-group mb-3">
+                                <label>Văn bản gốc (Plain Text)</label>
+                                <textarea class="form-control" name="inputPlainText" placeholder="Nhập bản rõ..." required autofocus></textarea>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label>Khóa K (Number)</label>
+                                <input type="number" class="form-control" name="inputKeyPlain" placeholder="Nhập số khóa K..." required>
+                            </div>
+                            <button type="submit" class="btn btn-encrypt w-100"><i class="fa-solid fa-bolt"></i> Tiến hành Mã hóa</button>
+                        </form>
+                        
+                        <!-- Result -->
+                        <div id="caesar-enc-box" class="result-box">
+                            <span class="result-label"><i class="fa-solid fa-square-poll-vertical"></i> Kết quả mã hóa</span>
+                            <div id="caesar-enc-text" class="result-text"></div>
+                            <button class="copy-btn" onclick="copyResult('caesar-enc-text')"><i class="fa-regular fa-copy"></i></button>
+                        </div>
+                    </div>
+
+                    <!-- Caesar Decryption Form -->
+                    <div class="card-section">
+                        <h4 class="card-section-title title-decrypt"><i class="fa-solid fa-lock-open"></i> Giải mã</h4>
+                        <form onsubmit="handleCipherSubmit(event, '/decrypt', 'caesar-dec')">
+                            <div class="form-group mb-3">
+                                <label>Bản mã (Cipher Text)</label>
+                                <textarea class="form-control" name="inputCipherText" placeholder="Nhập bản mã cần giải..." required></textarea>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label>Khóa K (Number)</label>
+                                <input type="number" class="form-control" name="inputKeyCipher" placeholder="Nhập số khóa K..." required>
+                            </div>
+                            <button type="submit" class="btn btn-decrypt w-100"><i class="fa-solid fa-unlock-keyhole"></i> Tiến hành Giải mã</button>
+                        </form>
+                        
+                        <!-- Result -->
+                        <div id="caesar-dec-box" class="result-box">
+                            <span class="result-label"><i class="fa-solid fa-square-poll-vertical"></i> Kết quả giải mã</span>
+                            <div id="caesar-dec-text" class="result-text"></div>
+                            <button class="copy-btn" onclick="copyResult('caesar-dec-text')"><i class="fa-regular fa-copy"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VIGENERE CIPHER PANEL -->
+            <section id="vigenere-panel" class="cipher-panel">
+                <div class="panel-header">
+                    <h3 class="panel-title"><i class="fa-solid fa-key"></i> Vigenere Cipher</h3>
+                    <p class="panel-desc">Mật mã Vigenère mã hóa văn bản bằng cách sử dụng các phép dịch chuyển Caesar khác nhau dựa trên các ký tự của một từ khóa (Key).</p>
+                </div>
+                
+                <div class="cipher-grid">
+                    <!-- Vigenere Encryption Form -->
+                    <div class="card-section">
+                        <h4 class="card-section-title title-encrypt"><i class="fa-solid fa-lock"></i> Mã hóa</h4>
+                        <form onsubmit="handleCipherSubmit(event, '/vigenere/encrypt', 'vigenere-enc')">
+                            <div class="form-group mb-3">
+                                <label>Văn bản gốc (Plain Text)</label>
+                                <textarea class="form-control" name="inputPlainText" placeholder="Nhập bản rõ..." required></textarea>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label>Khóa (Chữ cái)</label>
+                                <input type="text" class="form-control" name="inputKeyPlain" placeholder="Nhập từ khóa (ví dụ: KEY)..." required>
+                            </div>
+                            <button type="submit" class="btn btn-encrypt w-100"><i class="fa-solid fa-bolt"></i> Tiến hành Mã hóa</button>
+                        </form>
+                        
+                        <!-- Result -->
+                        <div id="vigenere-enc-box" class="result-box">
+                            <span class="result-label"><i class="fa-solid fa-square-poll-vertical"></i> Kết quả mã hóa</span>
+                            <div id="vigenere-enc-text" class="result-text"></div>
+                            <button class="copy-btn" onclick="copyResult('vigenere-enc-text')"><i class="fa-regular fa-copy"></i></button>
+                        </div>
+                    </div>
+
+                    <!-- Vigenere Decryption Form -->
+                    <div class="card-section">
+                        <h4 class="card-section-title title-decrypt"><i class="fa-solid fa-lock-open"></i> Giải mã</h4>
+                        <form onsubmit="handleCipherSubmit(event, '/vigenere/decrypt', 'vigenere-dec')">
+                            <div class="form-group mb-3">
+                                <label>Bản mã (Cipher Text)</label>
+                                <textarea class="form-control" name="inputCipherText" placeholder="Nhập bản mã cần giải..." required></textarea>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label>Khóa (Chữ cái)</label>
+                                <input type="text" class="form-control" name="inputKeyCipher" placeholder="Nhập từ khóa ban đầu..." required>
+                            </div>
+                            <button type="submit" class="btn btn-decrypt w-100"><i class="fa-solid fa-unlock-keyhole"></i> Tiến hành Giải mã</button>
+                        </form>
+                        
+                        <!-- Result -->
+                        <div id="vigenere-dec-box" class="result-box">
+                            <span class="result-label"><i class="fa-solid fa-square-poll-vertical"></i> Kết quả giải mã</span>
+                            <div id="vigenere-dec-text" class="result-text"></div>
+                            <button class="copy-btn" onclick="copyResult('vigenere-dec-text')"><i class="fa-regular fa-copy"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- RAIL FENCE CIPHER PANEL -->
+            <section id="railfence-panel" class="cipher-panel">
+                <div class="panel-header">
+                    <h3 class="panel-title"><i class="fa-solid fa-table-cells-large"></i> Rail Fence Cipher</h3>
+                    <p class="panel-desc">Mật mã đường ray (Rail Fence) viết văn bản theo đường chéo zic-zắc trên các hàng ảo và sau đó đọc lại theo từng hàng để mã hóa.</p>
+                </div>
+                
+                <div class="cipher-grid">
+                    <!-- Rail Fence Encryption Form -->
+                    <div class="card-section">
+                        <h4 class="card-section-title title-encrypt"><i class="fa-solid fa-lock"></i> Mã hóa</h4>
+                        <form onsubmit="handleCipherSubmit(event, '/railfence/encrypt', 'railfence-enc')">
+                            <div class="form-group mb-3">
+                                <label>Văn bản gốc (Plain Text)</label>
+                                <textarea class="form-control" name="inputPlainText" placeholder="Nhập bản rõ..." required></textarea>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label>Số đường ray (Rails)</label>
+                                <input type="number" class="form-control" name="inputKeyPlain" placeholder="Nhập số hàng (ví dụ: 3)..." required>
+                            </div>
+                            <button type="submit" class="btn btn-encrypt w-100"><i class="fa-solid fa-bolt"></i> Tiến hành Mã hóa</button>
+                        </form>
+                        
+                        <!-- Result -->
+                        <div id="railfence-enc-box" class="result-box">
+                            <span class="result-label"><i class="fa-solid fa-square-poll-vertical"></i> Kết quả mã hóa</span>
+                            <div id="railfence-enc-text" class="result-text"></div>
+                            <button class="copy-btn" onclick="copyResult('railfence-enc-text')"><i class="fa-regular fa-copy"></i></button>
+                        </div>
+                    </div>
+
+                    <!-- Rail Fence Decryption Form -->
+                    <div class="card-section">
+                        <h4 class="card-section-title title-decrypt"><i class="fa-solid fa-lock-open"></i> Giải mã</h4>
+                        <form onsubmit="handleCipherSubmit(event, '/railfence/decrypt', 'railfence-dec')">
+                            <div class="form-group mb-3">
+                                <label>Bản mã (Cipher Text)</label>
+                                <textarea class="form-control" name="inputCipherText" placeholder="Nhập bản mã cần giải..." required></textarea>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label>Số đường ray (Rails)</label>
+                                <input type="number" class="form-control" name="inputKeyCipher" placeholder="Nhập số hàng tương ứng..." required>
+                            </div>
+                            <button type="submit" class="btn btn-decrypt w-100"><i class="fa-solid fa-unlock-keyhole"></i> Tiến hành Giải mã</button>
+                        </form>
+                        
+                        <!-- Result -->
+                        <div id="railfence-dec-box" class="result-box">
+                            <span class="result-label"><i class="fa-solid fa-square-poll-vertical"></i> Kết quả giải mã</span>
+                            <div id="railfence-dec-text" class="result-text"></div>
+                            <button class="copy-btn" onclick="copyResult('railfence-dec-text')"><i class="fa-regular fa-copy"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PLAYFAIR CIPHER PANEL -->
+            <section id="playfair-panel" class="cipher-panel">
+                <div class="panel-header">
+                    <h3 class="panel-title"><i class="fa-solid fa-border-all"></i> Playfair Cipher</h3>
+                    <p class="panel-desc">Mật mã đối ngẫu Playfair mã hóa các cặp ký tự thay vì ký tự đơn lẻ bằng cách sử dụng một ma trận khóa kích thước 5x5.</p>
+                </div>
+                
+                <div class="cipher-grid">
+                    <!-- Playfair Create Matrix Card (Spans across or side-by-side) -->
+                    <div class="card-section" style="grid-column: span 2;">
+                        <h4 class="card-section-title title-matrix"><i class="fa-solid fa-table"></i> Tạo Ma Trận Khóa 5x5</h4>
+                        <form onsubmit="handlePlayfairMatrixSubmit(event)">
+                            <div class="d-flex gap-3 align-items-end flex-wrap">
+                                <div class="form-group flex-grow-1" style="min-width: 250px;">
+                                    <label>Khóa (Chữ cái)</label>
+                                    <input type="text" class="form-control" name="inputKeyMatrix" id="playfair-matrix-key" placeholder="Nhập khóa để khởi tạo ma trận..." required>
+                                </div>
+                                <button type="submit" class="btn btn-info mt-2"><i class="fa-solid fa-square-plus"></i> Khởi tạo Ma trận</button>
+                            </div>
+                        </form>
+                        
+                        <!-- Matrix Container -->
+                        <div id="playfair-matrix-container-box" class="result-box">
+                            <span class="result-label"><i class="fa-solid fa-border-all"></i> Ma Trận Khóa 5x5 Hiện Tại</span>
+                            <div class="playfair-matrix-container" id="playfair-matrix-grid">
+                                <!-- Generated Table will go here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Playfair Encryption Form -->
+                    <div class="card-section">
+                        <h4 class="card-section-title title-encrypt"><i class="fa-solid fa-lock"></i> Mã hóa</h4>
+                        <form onsubmit="handleCipherSubmit(event, '/playfair/encrypt', 'playfair-enc')">
+                            <div class="form-group mb-3">
+                                <label>Văn bản gốc (Plain Text)</label>
+                                <textarea class="form-control" name="inputPlainText" placeholder="Nhập bản rõ..." required></textarea>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label>Khóa (Trùng với khóa ma trận)</label>
+                                <input type="text" class="form-control" name="inputKeyPlain" id="playfair-enc-key" placeholder="Nhập khóa..." required>
+                            </div>
+                            <button type="submit" class="btn btn-encrypt w-100"><i class="fa-solid fa-bolt"></i> Tiến hành Mã hóa</button>
+                        </form>
+                        
+                        <!-- Result -->
+                        <div id="playfair-enc-box" class="result-box">
+                            <span class="result-label"><i class="fa-solid fa-square-poll-vertical"></i> Kết quả mã hóa</span>
+                            <div id="playfair-enc-text" class="result-text"></div>
+                            <button class="copy-btn" onclick="copyResult('playfair-enc-text')"><i class="fa-regular fa-copy"></i></button>
+                        </div>
+                    </div>
+
+                    <!-- Playfair Decryption Form -->
+                    <div class="card-section">
+                        <h4 class="card-section-title title-decrypt"><i class="fa-solid fa-lock-open"></i> Giải mã</h4>
+                        <form onsubmit="handleCipherSubmit(event, '/playfair/decrypt', 'playfair-dec')">
+                            <div class="form-group mb-3">
+                                <label>Bản mã (Cipher Text)</label>
+                                <textarea class="form-control" name="inputCipherText" placeholder="Nhập bản mã..." required></textarea>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label>Khóa (Trùng với khóa ma trận)</label>
+                                <input type="text" class="form-control" name="inputKeyCipher" id="playfair-dec-key" placeholder="Nhập khóa ban đầu..." required>
+                            </div>
+                            <button type="submit" class="btn btn-decrypt w-100"><i class="fa-solid fa-unlock-keyhole"></i> Tiến hành Giải mã</button>
+                        </form>
+                        
+                        <!-- Result -->
+                        <div id="playfair-dec-box" class="result-box">
+                            <span class="result-label"><i class="fa-solid fa-square-poll-vertical"></i> Kết quả giải mã</span>
+                            <div id="playfair-dec-text" class="result-text"></div>
+                            <button class="copy-btn" onclick="copyResult('playfair-dec-text')"><i class="fa-regular fa-copy"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TRANSPOSITION CIPHER PANEL -->
+            <section id="transposition-panel" class="cipher-panel">
+                <div class="panel-header">
+                    <h3 class="panel-title"><i class="fa-solid fa-arrows-split-up-and-left"></i> Transposition Cipher</h3>
+                    <p class="panel-desc">Mật mã chuyển vị (Transposition) mã hóa bằng cách thay đổi trật tự các ký tự của văn bản dựa trên số cột của khóa K.</p>
+                </div>
+                
+                <div class="cipher-grid">
+                    <!-- Transposition Encryption Form -->
+                    <div class="card-section">
+                        <h4 class="card-section-title title-encrypt"><i class="fa-solid fa-lock"></i> Mã hóa</h4>
+                        <form onsubmit="handleCipherSubmit(event, '/transposition/encrypt', 'transposition-enc')">
+                            <div class="form-group mb-3">
+                                <label>Văn bản gốc (Plain Text)</label>
+                                <textarea class="form-control" name="inputPlainText" placeholder="Nhập bản rõ..." required></textarea>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label>Khóa K (Số cột)</label>
+                                <input type="number" class="form-control" name="inputKeyPlain" placeholder="Nhập số khóa K..." required>
+                            </div>
+                            <button type="submit" class="btn btn-encrypt w-100"><i class="fa-solid fa-bolt"></i> Tiến hành Mã hóa</button>
+                        </form>
+                        
+                        <!-- Result -->
+                        <div id="transposition-enc-box" class="result-box">
+                            <span class="result-label"><i class="fa-solid fa-square-poll-vertical"></i> Kết quả mã hóa</span>
+                            <div id="transposition-enc-text" class="result-text"></div>
+                            <button class="copy-btn" onclick="copyResult('transposition-enc-text')"><i class="fa-regular fa-copy"></i></button>
+                        </div>
+                    </div>
+
+                    <!-- Transposition Decryption Form -->
+                    <div class="card-section">
+                        <h4 class="card-section-title title-decrypt"><i class="fa-solid fa-lock-open"></i> Giải mã</h4>
+                        <form onsubmit="handleCipherSubmit(event, '/transposition/decrypt', 'transposition-dec')">
+                            <div class="form-group mb-3">
+                                <label>Bản mã (Cipher Text)</label>
+                                <textarea class="form-control" name="inputCipherText" placeholder="Nhập bản mã cần giải..." required></textarea>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label>Khóa K (Số cột)</label>
+                                <input type="number" class="form-control" name="inputKeyCipher" placeholder="Nhập số khóa K..." required>
+                            </div>
+                            <button type="submit" class="btn btn-decrypt w-100"><i class="fa-solid fa-unlock-keyhole"></i> Tiến hành Giải mã</button>
+                        </form>
+                        
+                        <!-- Result -->
+                        <div id="transposition-dec-box" class="result-box">
+                            <span class="result-label"><i class="fa-solid fa-square-poll-vertical"></i> Kết quả giải mã</span>
+                            <div id="transposition-dec-text" class="result-text"></div>
+                            <button class="copy-btn" onclick="copyResult('transposition-dec-text')"><i class="fa-regular fa-copy"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- RSA CIPHER PANEL (PLACEHOLDER) -->
+            <section id="rsa-panel" class="cipher-panel">
+                <div class="panel-header">
+                    <h3 class="panel-title"><i class="fa-solid fa-shield-halved"></i> RSA Asymmetric Cipher</h3>
+                </div>
+                <div class="card-section rsa-placeholder-container">
+                    <i class="fa-solid fa-key rsa-icon"></i>
+                    <h4 class="rsa-title">Hệ Thống Mật Mã Bất Đối Xứng RSA</h4>
+                    <span class="rsa-badge">Đang phát triển</span>
+                    <p class="rsa-desc">Mật mã RSA hoạt động dựa trên cặp khóa công khai (Public Key) và khóa bí mật (Private Key). Thuật toán này sẽ được tích hợp chi tiết trong các bài thực hành nâng cao tiếp theo.</p>
+                </div>
+            </section>
+
+        </main>
     </div>
+
+    <!-- Footer Area -->
+    <footer>
+        <p>&copy; 2026 Đại học Công nghệ TP.HCM (HUTECH) - Khoa Công nghệ thông tin.</p>
+    </footer>
+
+    <!-- Clipboard Toast -->
+    <div id="toast" class="toast">
+        <i class="fa-solid fa-circle-check"></i> Đã sao chép thành công vào Clipboard!
+    </div>
+
+    <!-- Client-side Logic (AJAX / UI) -->
+    <script>
+        // Tab switching logic
+        function switchTab(cipherId) {
+            // Remove active classes from buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            // Remove active classes from panels
+            document.querySelectorAll('.cipher-panel').forEach(panel => panel.classList.remove('active'));
+
+            // Find clicked button and target panel
+            const activeBtn = event ? event.currentTarget : null;
+            if (activeBtn) {
+                activeBtn.classList.add('active');
+            } else {
+                // Initial fallback
+                const targetBtn = Array.from(document.querySelectorAll('.tab-btn')).find(b => b.textContent.toLowerCase().includes(cipherId));
+                if (targetBtn) targetBtn.classList.add('active');
+            }
+
+            document.getElementById(cipherId + '-panel').classList.add('active');
+        }
+
+        // Handle AJAX submit for general encryption/decryption
+        async function handleCipherSubmit(event, endpoint, resultPrefix) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+
+            // Visual feedback on button
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalBtnContent = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Đang xử lý...';
+
+            try {
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                const resultBox = document.getElementById(resultPrefix + '-box');
+                const resultText = document.getElementById(resultPrefix + '-text');
+
+                if (data.status === 'success') {
+                    resultText.textContent = data.result;
+                    resultBox.classList.add('show');
+                } else {
+                    alert('Thất bại: ' + (data.message || 'Lỗi không xác định từ server.'));
+                }
+            } catch (error) {
+                console.error('Error submitting form:', error);
+                alert('Không thể kết nối tới server. Vui lòng kiểm tra xem server Python Flask đã khởi chạy chưa.');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnContent;
+            }
+        }
+
+        // Handle Playfair matrix generation via AJAX
+        async function handlePlayfairMatrixSubmit(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            const key = document.getElementById('playfair-matrix-key').value;
+
+            // Sync matrix key to encrypt/decrypt forms
+            document.getElementById('playfair-enc-key').value = key;
+            document.getElementById('playfair-dec-key').value = key;
+
+            // Visual feedback
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalBtnContent = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Đang khởi tạo...';
+
+            try {
+                const response = await fetch('/playfair/creatematrix', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                const matrixBox = document.getElementById('playfair-matrix-container-box');
+                const matrixGrid = document.getElementById('playfair-matrix-grid');
+
+                if (data.status === 'success') {
+                    matrixGrid.innerHTML = '';
+                    
+                    const table = document.createElement('table');
+                    table.className = 'playfair-table';
+                    
+                    data.matrix.forEach(row => {
+                        const tr = document.createElement('tr');
+                        row.forEach(cell => {
+                            const td = document.createElement('td');
+                            td.textContent = cell;
+                            tr.appendChild(td);
+                        });
+                        table.appendChild(tr);
+                    });
+                    
+                    matrixGrid.appendChild(table);
+                    matrixBox.classList.add('show');
+                } else {
+                    alert('Lỗi tạo ma trận: ' + (data.message || 'Lỗi không xác định.'));
+                }
+            } catch (error) {
+                console.error('Error fetching matrix:', error);
+                alert('Lỗi kết nối server.');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnContent;
+            }
+        }
+
+        // Copy to clipboard helper
+        function copyResult(elementId) {
+            const text = document.getElementById(elementId).textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                showToast();
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+
+        // Show Toast Popup helper
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
+        }
+    </script>
 </body>
 </html>
