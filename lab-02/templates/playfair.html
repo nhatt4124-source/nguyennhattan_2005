@@ -8,6 +8,20 @@
     <div class="container">
         <table class="table">
             <tr><td style="text-align: center; font-weight: bold; font-size: 25px;">PLAYFAIR CIPHER</td></tr>
+            
+            <tr><td style="font-weight: bold; color: blue">CREATE MATRIX</td></tr>
+            <tr>
+                <td>
+                    <form method="POST" action="/playfair/creatematrix">
+                        <div class="mb-3">
+                            <label class="form-label">Key (text):</label>
+                            <input type="text" class="form-control" name="inputKeyMatrix" placeholder="Input Key to Generate Matrix" required/>
+                        </div>
+                        <button type="submit" class="btn btn-info">Create Matrix</button>
+                    </form>
+                </td>
+            </tr>
+
             <tr><td style="font-weight: bold; color: blue">ENCRYPTION</td></tr>
             <tr>
                 <td>

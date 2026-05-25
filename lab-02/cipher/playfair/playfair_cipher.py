@@ -12,7 +12,12 @@ class PlayFairCipher:
         alphabet = "ABCDEFGHIKLMNOPQRSTUVWXYZ"
         remaining_letters = [
             letter for letter in alphabet if letter not in key_set]
-        matrix = list(key)
+        #Loại bỏ ký tự trùng lặp
+        unique_key = []
+        for letter in key:
+            if letter not in unique_key:
+                unique_key.append(letter)
+        matrix = unique_key
         
         for letter in remaining_letters:
             matrix.append(letter)
