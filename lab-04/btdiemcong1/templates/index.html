@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CHAT BOX - Secure DH-AES</title>
+    <!-- Google Font "Outfit" -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <!-- Background grid/glow effects -->
+    <div class="glow-bg">
+        <div class="glow-sphere glow-purple"></div>
+        <div class="glow-sphere glow-blue"></div>
+    </div>
+
+    <!-- Entrance Modal -->
+    <div id="login-modal" class="modal-overlay">
+        <div class="glass-card modal-card">
+            <div class="modal-header">
+                <div class="shield-icon-container">
+                    <svg viewBox="0 0 24 24" class="shield-icon glow-svg">
+                        <path fill="currentColor" d="M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1M12,5A3,3 0 0,1 15,8A3,3 0 0,1 12,11A3,3 0 0,1 9,8A3,3 0 0,1 12,5M12,13C14.67,13 20,14.33 20,17V19H4V17C4,14.33 9.33,13 12,13Z"/>
+                    </svg>
+                </div>
+                <h2>CHAT BOX</h2>
+                <p>Ứng dụng nhắn tin bảo mật tích hợp Diffie-Hellman - AES Socket</p>
+            </div>
+            
+            <div id="login-form">
+                <div class="input-group">
+                    <label for="username">Tên người dùng</label>
+                    <input type="text" id="username" placeholder="Nhập tên của bạn..." autocomplete="off" maxlength="20">
+                </div>
+                <button id="btn-connect" class="btn btn-primary glow-button">
+                    <span>Thỏa thuận bảo mật & Kết nối</span>
+                </button>
+            </div>
+
+            <div id="handshake-loader" class="hidden">
+                <div class="spinner"></div>
+                <div class="loader-steps">
+                    <div class="step" id="step-dh-gen">
+                        <span class="status-icon">⚪</span>
+                        <span class="step-text">Khởi tạo khóa DH Private Key cục bộ...</span>
+                    </div>
+                    <div class="step" id="step-dh-ex">
+                        <span class="status-icon">⚪</span>
+                        <span class="step-text">Đang trao đổi khóa DH Public Key...</span>
+                    </div>
+                    <div class="step" id="step-aes-derive">
+                        <span class="status-icon">⚪</span>
+                        <span class="step-text">Đang suy diễn ra khóa đối xứng phiên AES...</span>
+                    </div>
+                    <div class="step" id="step-sse-connect">
+                        <span class="status-icon">⚪</span>
+                        <span class="step-text">Đang kết nối luồng tin nhắn thời gian thực...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Chat Workspace -->
+    <div id="chat-workspace" class="glass-card main-workspace hidden">
+        
+        <!-- Sidebar - Active Users -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h3>Người dùng trực tuyến</h3>
+                <span class="badge" id="online-count">0</span>
+            </div>
+            <div class="client-list" id="client-list">
+                <!-- Dynamic active clients will be rendered here -->
+                <div class="client-placeholder">Đang tải danh sách...</div>
+            </div>
+            <div class="user-profile">
+                <div class="user-avatar" id="my-avatar">U</div>
+                <div class="user-info">
+                    <h4 id="my-name">User</h4>
+                    <span class="status-online">Trực tuyến</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Chat Area -->
+        <main class="chat-area">
+            <header class="chat-header">
+                <div class="chat-header-info">
+                    <h3>CHAT BOX</h3>
+                    <p class="crypto-badge">
+                        <svg class="lock-icon" viewBox="0 0 24 24"><path fill="currentColor" d="M18,8H17V6A5,5 0 0,0 12,1A5,5 0 0,0 7,6V8H6A2,2 0 0,0 4,10V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V10A2,2 0 0,0 18,8M8.9,6C8.9,4.29 10.29,2.9 12,2.9C13.71,2.9 15.1,4.29 15.1,6V8H8.9V6M18,20H6V10H18V20M12,13A2,2 0 0,0 10,15A2,2 0 0,0 12,17A2,2 0 0,0 14,15A2,2 0 0,0 12,13Z"/></svg>
+                        Thỏa thuận DH-1024 & Mã hóa AES-128-CBC
+                    </p>
+                </div>
+                <button class="btn btn-icon" id="btn-toggle-security" title="Thông số bảo mật">
+                    <svg viewBox="0 0 24 24" class="svg-icon"><path fill="currentColor" d="M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1M12,7A3,3 0 0,1 15,10A3,3 0 0,1 12,13A3,3 0 0,1 9,10A3,3 0 0,1 12,7M12,15C14.67,15 20,16.33 20,19H4V17C4,15.33 9.33,15 12,15Z"/></svg>
+                </button>
+            </header>
+
+            <div class="messages-container" id="messages-container">
+                <div class="system-message">Chào mừng bạn đến với CHAT BOX. Mọi tin nhắn đều được mã hóa trước khi gửi đi.</div>
+            </div>
+
+            <footer class="chat-footer">
+                <form id="chat-form">
+                    <input type="text" id="message-input" placeholder="Nhập tin nhắn bảo mật..." autocomplete="off">
+                    <button type="submit" id="btn-send" class="btn btn-primary glow-button">
+                        <svg class="send-icon" viewBox="0 0 24 24"><path fill="currentColor" d="M2,21L23,12L2,3V10L17,12L2,14V21Z"/></svg>
+                    </button>
+                </form>
+            </footer>
+        </main>
+
+        <!-- Right Security Info Drawer -->
+        <aside class="security-panel" id="security-panel">
+            <div class="panel-header">
+                <h3>Trạng thái bảo mật</h3>
+                <button class="btn btn-close" id="btn-close-security">&times;</button>
+            </div>
+            <div class="panel-content">
+                <div class="crypto-metric">
+                    <span class="label">Mã hóa tin nhắn</span>
+                    <span class="value success">AES-128-CBC (PKCS#7)</span>
+                </div>
+                <div class="crypto-metric">
+                    <span class="label">Thỏa thuận khóa đối xứng</span>
+                    <span class="value success">Diffie-Hellman 1024-bit</span>
+                </div>
+                <div class="crypto-metric">
+                    <span class="label">Khóa đối xứng phiên AES</span>
+                    <span class="value" id="aes-key-status">Đồng bộ qua DH</span>
+                </div>
+                
+                <div class="section-title">Số nguyên tố DH (Prime - p)</div>
+                <div class="code-box">
+                    <code id="dh-p-preview">Đang tải...</code>
+                </div>
+
+                <div class="section-title">Cơ số DH (Generator - g)</div>
+                <div class="code-box">
+                    <code id="dh-g-preview">Đang tải...</code>
+                </div>
+
+                <div class="section-title">Khóa công khai của Server (Server DH Public Key - Ys)</div>
+                <div class="code-box">
+                    <code id="server-pub-preview">Đang tải...</code>
+                </div>
+
+                <div class="section-title">Khóa công khai của bạn (Client DH Public Key - Yc)</div>
+                <div class="code-box">
+                    <code id="client-pub-preview">Đang tải...</code>
+                </div>
+
+                <div class="section-title">Khóa đối xứng phiên sau băm SHA-256</div>
+                <div class="code-box">
+                    <code id="aes-key-preview">Đang tải...</code>
+                </div>
+
+                <div class="section-title">Gói tin mã hóa gần nhất</div>
+                <div class="crypto-packet-viewer">
+                    <div class="packet-title">Payload (AES Ciphertext & IV)</div>
+                    <pre class="code-box font-code" id="last-packet-preview">Chưa có dữ liệu gửi/nhận.</pre>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- JS Scripts -->
+    <script src="/static/app.js"></script>
+</body>
+</html>
