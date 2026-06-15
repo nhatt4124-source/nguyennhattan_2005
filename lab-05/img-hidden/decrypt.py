@@ -16,10 +16,9 @@ def decode_image(encoded_image_path):
     message = ""
     for i in range(0, len(binary_message), 8):
         char = chr(int(binary_message[i:i+8], 2))
-        message += char
-        if message.endswith('\xff\xfe'):
-            message = message[:-2]  # Loại bỏ ký tự đánh dấu kết thúc khỏi thông điệp
+        if char == '\0': # Kết thúc thông điệp khi gặp dấu '\0'
             break
+        message += char
 
     return message
 

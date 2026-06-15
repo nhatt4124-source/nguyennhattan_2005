@@ -12,12 +12,7 @@ def handle_client(client_socket):
     # Thêm client vào danh sách
     clients.append(client_socket)
 
-    try:
-        client_name = client_socket.getpeername()
-    except:
-        client_name = "Unknown"
-
-    print("Đã kết nối với:", client_name)
+    print("Đã kết nối với:", client_socket.getpeername())
 
     try:
         # Nhận và gửi dữ liệu
@@ -28,20 +23,17 @@ def handle_client(client_socket):
             print("Nhận:", data.decode('utf-8'))
 
             # Gửi dữ liệu đến tất cả các client khác
-            for client in list(clients):
+            for client in clients:
                 if client != client_socket:
                     try:
                         client.send(data)
                     except:
-                        if client in clients:
-                            clients.remove(client)
+                        clients.remove(client)
     except:
-        if client_socket in clients:
-            clients.remove(client_socket)
+        clients.remove(client_socket)
     finally:
-        print("Đã ngắt kết nối:", client_name)
-        if client_socket in clients:
-            clients.remove(client_socket)
+        print("Đã ngắt kết nối:", client_socket.getpeername())
+        clients.remove(client_socket)
         client_socket.close()
 
 # Tạo socket server
