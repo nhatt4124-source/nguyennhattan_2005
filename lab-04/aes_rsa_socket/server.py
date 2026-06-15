@@ -4,6 +4,14 @@ from Crypto.Random import get_random_bytes
 from Crypto.Util.Padding import pad, unpad
 import socket
 import threading
+import sys
+
+# Reconfigure stdout/stderr to UTF-8 to prevent charmap codec errors on Windows
+try:
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
+except Exception:
+    pass
 
 # Initialize server socket
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -33,49 +41,60 @@ def decrypt_message(key, encrypted_message):
 # Function to handle client connection
 def handle_client(client_socket, client_address):
     print(f"Connected with {client_address}")
+    aes_key = None
 
-    # Send server's public key to client
-    client_socket.send(server_key.publickey().export_key(format='PEM'))
+    try:
+        # Send server's public key to client
+        client_socket.send(server_key.publickey().export_key(format='PEM'))
 
-    # Receive client's public key
-    client_received_key = RSA.import_key(client_socket.recv(2048))
+        # Receive client's public key
+        client_received_key = RSA.import_key(client_socket.recv(2048))
 
-    # Generate AES key for message encryption
-    aes_key = get_random_bytes(16)
+        # Generate AES key for message encryption
+        aes_key = get_random_bytes(16)
 
-    # Encrypt the AES key using the client's public key
-    cipher_rsa = PKCS1_OAEP.new(client_received_key)
-    encrypted_aes_key = cipher_rsa.encrypt(aes_key)
-    client_socket.send(encrypted_aes_key)
+        # Encrypt the AES key using the client's public key
+        cipher_rsa = PKCS1_OAEP.new(client_received_key)
+        encrypted_aes_key = cipher_rsa.encrypt(aes_key)
+        client_socket.send(encrypted_aes_key)
 
-    # Add client to the list
-    clients.append((client_socket, aes_key))
+        # Add client to the list
+        clients.append((client_socket, aes_key))
 
-    while True:
-        encrypted_message = client_socket.recv(1024)
-        if not encrypted_message:
-            break
-        try:
-            decrypted_message = decrypt_message(aes_key, encrypted_message)
-        except Exception:
-            break
-        print(f"Received from {client_address}: {decrypted_message}")
+        while True:
+            encrypted_message = client_socket.recv(1024)
+            if not encrypted_message:
+                break
+            try:
+                decrypted_message = decrypt_message(aes_key, encrypted_message)
+            except Exception:
+                break
+            print(f"Received from {client_address}: {decrypted_message}")
 
-        # Send received message to all other clients
-        for client, key in clients:
-            if client != client_socket:
-                encrypted = encrypt_message(key, decrypted_message)
-                client.send(encrypted)
+            # Send received message to all other clients
+            for client, key in clients:
+                if client != client_socket:
+                    try:
+                        encrypted = encrypt_message(key, decrypted_message)
+                        client.send(encrypted)
+                    except Exception:
+                        pass
 
-        if decrypted_message == "exit":
-            break
-
-    clients.remove((client_socket, aes_key))
-    client_socket.close()
-    print(f"Connection with {client_address} closed")
+            if decrypted_message == "exit":
+                break
+    except (ConnectionResetError, ConnectionAbortedError):
+        print(f"Connection with {client_address} reset by peer")
+    except Exception as e:
+        print(f"Error handling client {client_address}: {e}")
+    finally:
+        if aes_key is not None and (client_socket, aes_key) in clients:
+            clients.remove((client_socket, aes_key))
+        client_socket.close()
+        print(f"Connection with {client_address} closed")
 
 # Accept and handle client connections
 while True:
     client_socket, client_address = server_socket.accept()
     client_thread = threading.Thread(target=handle_client, args=(client_socket, client_address))
     client_thread.start()
+

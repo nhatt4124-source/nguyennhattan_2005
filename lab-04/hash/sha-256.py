@@ -1,4 +1,13 @@
 import hashlib
+import sys
+
+# Reconfigure stdout/stderr to UTF-8 to prevent charmap codec errors on Windows
+try:
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
+except Exception:
+    pass
+
 
 def calculate_sha256_hash(data):
     sha256_hash = hashlib.sha256()

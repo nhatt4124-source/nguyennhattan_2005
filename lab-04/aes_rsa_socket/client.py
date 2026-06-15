@@ -3,6 +3,14 @@ from Crypto.PublicKey import RSA
 from Crypto.Util.Padding import pad, unpad
 import socket
 import threading
+import sys
+
+# Reconfigure stdout/stderr to UTF-8 to prevent charmap codec errors on Windows
+try:
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
+except Exception:
+    pass
 
 # Initialize client socket
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -40,22 +48,40 @@ def decrypt_message(key, encrypted_message):
 
 # Function to receive messages from server
 def receive_messages():
-    while True:
-        encrypted_message = client_socket.recv(1024)
-        decrypted_message = decrypt_message(aes_key, encrypted_message)
-        print("Received:", decrypted_message)
+    try:
+        while True:
+            encrypted_message = client_socket.recv(1024)
+            if not encrypted_message:
+                print("\nServer closed the connection.")
+                break
+            try:
+                decrypted_message = decrypt_message(aes_key, encrypted_message)
+                print(f"\nReceived: {decrypted_message}")
+                print("Enter message ('exit' to quit): ", end="", flush=True)
+            except Exception as e:
+                print(f"\nError decrypting message: {e}")
+    except (ConnectionResetError, ConnectionAbortedError):
+        print("\nConnection to server lost.")
+    except Exception as e:
+        print(f"\nError receiving message: {e}")
 
 # Start the receiving thread
 receive_thread = threading.Thread(target=receive_messages, daemon=True)
 receive_thread.start()
 
 # Send messages from the client
-while True:
-    message = input("Enter message ('exit' to quit): ")
-    encrypted_message = encrypt_message(aes_key, message)
-    client_socket.send(encrypted_message)
-    if message == 'exit':
-        break
+try:
+    while True:
+        message = input("Enter message ('exit' to quit): ")
+        encrypted_message = encrypt_message(aes_key, message)
+        client_socket.send(encrypted_message)
+        if message == 'exit':
+            break
+except (KeyboardInterrupt, EOFError):
+    pass
+except Exception as e:
+    print(f"Error sending message: {e}")
+finally:
+    # Close the connection when done
+    client_socket.close()
 
-# Close the connection when done
-client_socket.close()

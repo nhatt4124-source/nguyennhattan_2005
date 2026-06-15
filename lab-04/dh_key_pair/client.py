@@ -1,5 +1,14 @@
 from cryptography.hazmat.primitives.asymmetric import dh
 from cryptography.hazmat.primitives import serialization
+import sys
+
+# Reconfigure stdout/stderr to UTF-8 to prevent charmap codec errors on Windows
+try:
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
+except Exception:
+    pass
+
 
 def generate_client_key_pair(parameters):
     private_key = parameters.generate_private_key()

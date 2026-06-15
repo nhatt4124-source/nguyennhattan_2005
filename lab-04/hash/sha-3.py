@@ -1,4 +1,13 @@
 from Crypto.Hash import SHA3_256
+import sys
+
+# Reconfigure stdout/stderr to UTF-8 to prevent charmap codec errors on Windows
+try:
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
+except Exception:
+    pass
+
 
 def sha3(message):
     sha3_hash = SHA3_256.new()
